@@ -6,6 +6,7 @@
 //
 import SwiftUI
 
+// TODO: reuse with button action bar
 // MARK: - Main Action Button (Reusable)
 struct MainActionButton<Content: View>: View {
     
@@ -99,16 +100,6 @@ struct ActionBar<MainContent: View>: View {
                 .padding(.bottom, 8)
         }
         .padding(.bottom, 30)
-        .background(
-            ZStack {
-                CustomCornerShape(corners: [.topLeft, .topRight], radius: 30)
-                    .fill(.ultraThinMaterial)
-                CustomCornerShape(corners: [.topLeft, .topRight], radius: 30)
-                    .fill(Color.white.opacity(0.2))
-                    .blendMode(.plusLighter)
-            }
-            .ignoresSafeArea()
-        )
     }
 }
 

@@ -11,7 +11,7 @@ import Foundation
 /// Satu "babak" dalam percakapan NPC.
 /// NPC tetap di stage ini sampai user menyebut salah satu transitionKeywords,
 /// lalu maju ke stage berikutnya. Stage terakhir (isTerminal = true) menutup percakapan.
-struct ConversationStage {
+struct ConversationStage: Hashable {
     /// Instruksi khusus stage ini — ditambahkan ke baseSystemPrompt saat memanggil model
     let stagePrompt: String
  
@@ -31,7 +31,7 @@ struct ConversationStage {
  
 // MARK: - NPC Scenario
  
-struct NPCScenario {
+struct NPCScenario: Hashable {
     let id: String
     let title: String
     /// Deskripsi chapter untuk ditampilkan di menu
@@ -80,10 +80,7 @@ struct NPCScenario {
  
      /// Cek apakah user input memenuhi syarat transisi stage.
      /// Returns true jika stage berhasil maju.
-     ///
-     /// Menggunakan multiple detection strategies:
-     /// 1. Substring matching pada keywords (case-insensitive)
-     /// 2. Partial character matching untuk keywords Chinese
+
      mutating func advanceIfNeeded(for userText: String) -> Bool {
          guard !isFinished else { return false }
          let lower = userText.lowercased()

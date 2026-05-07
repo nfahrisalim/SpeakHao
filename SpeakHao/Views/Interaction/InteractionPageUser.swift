@@ -6,14 +6,19 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct InteractionPageUser: View {
     @State private var goToMainMenu = false
-    @State private var showBackAlert = false
     @State private var isPressed = false
     @State private var pinyin = ""
     @State private var chinese = ""
     @State private var translation = ""
+    @Environment(\.dismiss) var dismiss
+    
+    let onBackTapped: () -> Void
+    let npcMessage: ConversationMessage
+    let speechSynthesizer: AVSpeechSynthesizer
     
     var body: some View {
         NavigationStack {
@@ -28,8 +33,8 @@ struct InteractionPageUser: View {
                         // Top Bar
                         NavigationBar(
                             onBack: {
-                                print("Back tapped")
-                                showBackAlert = true
+                                print("Back tapped - going back to ConversationView")
+                                onBackTapped()
                             },
                             onHistory: {
                                 print("History tapped")
@@ -48,7 +53,8 @@ struct InteractionPageUser: View {
                         
                         // MARK: - Container P (button to repeat earlier question)
                         Button(action: {
-                            print("Repeat tapped")
+                            print("Repeat tapped - speaking NPC message")
+                            speakMessage(npcMessage)
                         }) {
                             Text("Please repeat what you said earlier")
                                 .font(.system(size: 15, weight: .medium))
@@ -88,164 +94,38 @@ struct InteractionPageUser: View {
                 }
                 .navigationBarBackButtonHidden(true)
                 .toolbar(.hidden, for: .navigationBar)
-                .customAlert(
-                    isPresented: $showBackAlert,
-                    alert: PopUpData(
-                        icon: "pause.circle",
-                        iconColor: .black,
-                        title: "Percakapan Dijeda",
-                        secondaryButtonTitle: "Lanjutkan Percakapan",
-                        primaryButtonTitle: "Keluar dari Percakapan",
-                        secondaryAction: {
-                            showBackAlert = false
-                        },
-                        primaryAction: {
-                            showBackAlert = false
-                            goToMainMenu = true
-                        }
-                    )
-                )
             }
-            // ✅ Fix issue 3: Ganti NavigationLink(isActive:) yang deprecated
-            // dengan navigationDestination(isPresented:)
+            // ✅ Use navigationDestination(isPresented:) instead of deprecated NavigationLink(isActive:)
             .navigationDestination(isPresented: $goToMainMenu) {
                 InteractionNPCView()
             }
         }
     }
-}
-
-// MARK: - Speech Bubble
-struct SpeechBubbleUser: View {
     
-    @Binding var pinyinText: String
-    @Binding var chineseText: String
-    @Binding var translationText: String
+    // MARK: - Text-to-Speech
     
-    var body: some View {
-        
-        let isEmpty = pinyinText.isEmpty &&
-                      chineseText.isEmpty &&
-                      translationText.isEmpty
-        
-        HStack {
-            Spacer()
-            
-            VStack(alignment: .leading, spacing: 10) {
-                
-                // TEXT AREA (SCROLLABLE)
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 6) {
-                        
-                        if !pinyinText.isEmpty {
-                            Text(pinyinText)
-                                .font(.system(size: 16))
-                                .foregroundColor(.black.opacity(0.7))
-                        }
-                        
-                        if !chineseText.isEmpty {
-                            Text(chineseText)
-                                .font(.system(size: 22, weight: .bold))
-                                .foregroundColor(.black)
-                        }
-                        
-                        if !translationText.isEmpty {
-                            Text(translationText)
-                                .font(.system(size: 16).italic())
-                                .foregroundColor(.gray)
-                        }
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.top, 10)
-                }
-                .frame(maxHeight: 120)
-                
-                // ACTION BUTTONS
-                HStack {
-                    
-                    // DELETE
-                    Button(action: {
-                        pinyinText = ""
-                        chineseText = ""
-                        translationText = ""
-                    }) {
-                        Image(systemName: "trash.fill")
-                            .foregroundColor(isEmpty ? .gray.opacity(0.8) : .gray)
-                            .frame(width: 50, height: 50)
-                            .background(Color.white.opacity(0.6))
-                            .clipShape(Circle())
-                            .font(Font.system(size: 23))
-                    }
-                    .shadow(color: .black.opacity(0.2), radius: 0, x: 0, y: 0)
-                    .disabled(isEmpty)
-                    
-                    Spacer()
-                    
-                    // SEND
-                    Button(action: {
-                        print("Send:", chineseText)
-                    }) {
-                        HStack(spacing: 6) {
-                            Image(systemName: "paperplane.fill")
-                            Text("Kirim")
-                        }
-                        .font(.system(size: 17, weight: .medium))
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 8)
-                        .background(isEmpty ? Color.gray.opacity(0.5) : Color.blue)
-                        .foregroundColor(.white)
-                        .clipShape(Capsule())
-                    }
-                    .disabled(isEmpty)
-                }
-            }
-            .padding(14)
-            .frame(maxWidth: 400)
-            .background(
-                ZStack {
-                    RoundedRectangle(cornerRadius: 40)
-                        .fill(Color.white)
-                }
-                .overlay(
-                    RoundedRectangle(cornerRadius: 40)
-                        .stroke(Color.white.opacity(0.5), lineWidth: 1)
-                )
-                .overlay(alignment: .bottomTrailing) {
-                    BubbleTail()
-                        .fill(Color.white)
-                        .frame(width: 40, height: 12)
-                        .rotationEffect(.degrees(180))
-                        .offset(x: -30, y: 10)
-                }
-            )
+    private func speakMessage(_ message: ConversationMessage) {
+        if speechSynthesizer.isSpeaking {
+            speechSynthesizer.stopSpeaking(at: .immediate)
         }
-        .padding(.horizontal, 20)
+        
+        let utterance = AVSpeechUtterance(string: message.chineseText)
+        utterance.voice = AVSpeechSynthesisVoice(language: "zh-CN")
+        utterance.rate = 0.5
+        utterance.pitchMultiplier = 1.0
+        utterance.volume = 1.0
+        
+        speechSynthesizer.speak(utterance)
+        print("🔊 Speaking: \(message.chineseText)")
     }
 }
 
-struct BubbleTail: Shape {
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        
-        path.move(to: CGPoint(x: rect.minX, y: rect.maxY))
-        
-        path.addCurve(
-            to: CGPoint(x: rect.midX, y: rect.minY),
-            control1: CGPoint(x: rect.minX + rect.width * 0.30, y: rect.maxY),
-            control2: CGPoint(x: rect.midX - rect.width * 0.10, y: rect.minY)
-        )
-        
-        path.addCurve(
-            to: CGPoint(x: rect.maxX, y: rect.maxY),
-            control1: CGPoint(x: rect.midX + rect.width * 0.10, y: rect.minY),
-            control2: CGPoint(x: rect.maxX - rect.width * 0.30, y: rect.maxY)
-        )
-        
-        path.closeSubpath()
-        return path
-    }
-}
+
 
 #Preview {
-    InteractionPageUser()
+    InteractionPageUser(
+        onBackTapped: {},
+        npcMessage: ConversationMessage(role: .npc, chinese: "你好", pinyin: "Ni hao", english: "Hello"),
+        speechSynthesizer: AVSpeechSynthesizer()
+    )
 }

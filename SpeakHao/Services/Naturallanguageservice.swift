@@ -109,6 +109,39 @@ class NaturalLanguageService {
             return .neutral
         }
     }
+    
+//    /// Detect emotional tone/sentiment of user input
+//    func detectSentiment(in text: String) -> String {
+//        let lower = text.lowercased()
+//        
+//        // Negative indicators (rude, frustrated, angry)
+//        let negativeKeywords = [
+//            "草你妈", "cao ni ma", "傻", "stupid", "蠢", "dumb", "烦", "烦死了",
+//            "滚", "fuck", "shit", "damn", "去死", "die", "垃圾", "garbage",
+//            "你妈", "bastard", "操", "烦你", "讨厌", "hate"
+//        ]
+//        
+//        // Positive indicators
+//        let positiveKeywords = [
+//            "好", "好的", "很好", "太好了", "谢谢", "谢谢你", "可以", "行", "可以啊",
+//            "great", "good", "thank", "thanks", "perfect", "ok", "sure", "happy",
+//            "很开心", "开心", "高兴", "满意", "非常满意"
+//        ]
+//        
+//        let hasNegative = negativeKeywords.contains { lower.contains($0) }
+//        let hasPositive = positiveKeywords.contains { lower.contains($0) }
+//        
+//        if hasNegative {
+//            return "negative"
+//        } else if hasPositive {
+//            return "positive"
+//        } else if lower.isEmpty || lower.count < 2 {
+//            return "confused"
+//        } else {
+//            return "neutral"
+//        }
+//    }
+    
     func extractTimelineKeywords(from text: String) -> [String] {
         let timelineKeywords = [
             "天", "天", "日", "周", "月", "年", "小时", "分钟", "秒",

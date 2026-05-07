@@ -4,18 +4,7 @@
 //
 //  Created by Muh. Naufal Fahri Salim on 5/1/26.
 //
-//
-//  Scenariomenubridge.swift
-//  SpeakHao
-//
-//  Created by Muh. Naufal Fahri Salim on 5/6/26.
-//
-//
-//  MainMenuView.swift
-//  SpeakHao
-//
-//  Created by Muh. Naufal Fahri Salim on 5/1/26.
-//
+
 
 import SwiftUI
 

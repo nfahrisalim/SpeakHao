@@ -11,7 +11,9 @@ import SwiftUI
 struct SpeakHaoApp: App {
     var body: some Scene {
         WindowGroup {
-        MainMenuSwipe2()
+            NavigationStack {
+                Splash()
+            }
         }
     }
 }

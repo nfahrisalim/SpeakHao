@@ -61,17 +61,6 @@ struct BottomActionBar: View {
                 .hidden()
         }
         .padding(.top, 25)
-        // ✅ Background disamakan dengan ActionBar milik Ririn
-        .background(
-            ZStack {
-                CustomCornerShape(corners: [.topLeft, .topRight], radius: 30)
-                    .fill(.ultraThinMaterial)
-                CustomCornerShape(corners: [.topLeft, .topRight], radius: 30)
-                    .fill(Color.white.opacity(0.2))
-                    .blendMode(.plusLighter)
-            }
-            .ignoresSafeArea()
-        )
     }
 }
 

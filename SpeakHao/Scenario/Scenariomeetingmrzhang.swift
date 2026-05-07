@@ -6,6 +6,9 @@
 //
 import Foundation
 
+//camelcase -> foundationModelService -> non object -> var isTranslated, func fallbackResponse, constants
+//capital each word -> FoundationModelService -> object -> class/struct ClientMeetingMrZhangScenario
+
 struct ClientMeetingMrZhangScenario: ScenarioProvider {
 
     // MARK: - Scenario Definition

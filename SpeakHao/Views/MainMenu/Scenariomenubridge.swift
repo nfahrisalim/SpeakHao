@@ -38,6 +38,8 @@ extension ScenarioRegistry {
 
 struct MainMenuSwipe2: View {
 
+    @State private var selectedScenario: NPCScenario? = nil
+
     var body: some View {
         ZStack(alignment: .bottom) {
 
@@ -55,6 +57,14 @@ struct MainMenuSwipe2: View {
             .tabViewStyle(.page(indexDisplayMode: .always))
             .ignoresSafeArea()
         }
+        .navigationDestination(item: $selectedScenario) { scenario in
+            let initialMessage = scenario.initialMessage
+            return ConversationView(
+                pinyin: initialMessage.pinyinText,
+                chinese: initialMessage.chineseText,
+                translation: initialMessage.englishText
+            )
+        }
     }
 
     @ViewBuilder
@@ -70,25 +80,15 @@ struct MainMenuSwipe2: View {
                 PopUpLocked()
             }
         } else {
-            ZStack {
-                MainMenuView(
-                    chapterNumber:  card.id,
-                    chapterTitle:   card.title,
-                    chapterPreview: card.preview,
-                    characterImage: card.characterImage
-                )
-                VStack {
-                    Spacer()
-                    HStack {
-                        Spacer()
-                        NavigationLink(destination: ConversationView(scenario: card.scenario)) {
-                            Color.clear.frame(width: 220, height: 48)
-                        }
-                        Spacer()
-                    }
-                    .padding(.bottom, 90)
+            MainMenuView(
+                chapterNumber:  card.id,
+                chapterTitle:   card.title,
+                chapterPreview: card.preview,
+                characterImage: card.characterImage,
+                onStart: {
+                    selectedScenario = card.scenario
                 }
-            }
+            )
         }
     }
 }

@@ -5,13 +5,13 @@
 //  Created by Muh. Naufal Fahri Salim on 5/4/26.
 //
 
-import Foundation          
+import Foundation
 import Combine
 import FoundationModels
 
 // MARK: - Conversation Message
 
-struct ConversationMessage: Identifiable, Equatable {
+struct ConversationMessage: Identifiable, Equatable, Hashable {
     let id = UUID()
     let role: MessageRole
     let chineseText: String
@@ -20,7 +20,7 @@ struct ConversationMessage: Identifiable, Equatable {
     let timestamp: Date
     let isClosing: Bool
 
-    enum MessageRole {
+    enum MessageRole: Hashable {
         case npc, user
     }
 
@@ -73,6 +73,7 @@ class FoundationModelsService: ObservableObject {
     @Published var isGenerating = false
     @Published var errorMessage: String?
     @Published var isConversationComplete = false
+    @Published var messages: [ConversationMessage] = []
 
     private var scenario: NPCScenario
 
@@ -231,7 +232,7 @@ class FoundationModelsService: ObservableObject {
         )
     }
 
-    // MARK: - Build Enhanced Input
+    // Input
 
     private func buildEnhancedInput(
         userText: String,

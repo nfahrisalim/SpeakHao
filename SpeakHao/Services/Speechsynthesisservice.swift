@@ -42,7 +42,7 @@ class SpeechSynthesisService: NSObject, ObservableObject, AVSpeechSynthesizerDel
         synthesizer.speak(utterance)
     }
 
-    // MARK: - Voice Selection
+    // Voice Selection
 
     private func bestVoice(for language: String) -> AVSpeechSynthesisVoice? {
         let prefix = String(language.prefix(2))

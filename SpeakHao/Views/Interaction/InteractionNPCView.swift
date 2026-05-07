@@ -7,6 +7,7 @@
 
 
 import SwiftUI
+import AVFoundation
 
 struct InteractionNPCView: View {
     @State private var isPressed = false
@@ -15,17 +16,26 @@ struct InteractionNPCView: View {
     @State private var navigateToInteractionPageUser = false
     @State private var showBackAlert = false
     @State private var goToMainMenu = false
+    @State private var speechSynthesizer = AVSpeechSynthesizer()
     
     let pinyinText = "Lǐ nǚshì, zǎoshang hǎo, nín hǎo ma?"
     let chineseText = "李女士，早上好，您好吗？"
     let translationText = "Ms. Li, good morning, how are you?"
+    
+    var currentMessage: ConversationMessage {
+        ConversationMessage(
+            role: .npc,
+            chinese: chineseText,
+            pinyin: pinyinText,
+            english: translationText
+        )
+    }
     
     var body: some View {
         NavigationStack {
             ZStack {
                 // Background
                 InteractionSceneView()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .ignoresSafeArea()
                 
                 GeometryReader { geometry in
@@ -60,10 +70,11 @@ struct InteractionNPCView: View {
                         BottomActionBar(
                             isPressed: $isPressed,
                             onAnswerTap: {
+                                speakMessage(currentMessage)
                                 navigateToInteractionPageUser = true
                             },
                             onBookTap: {
-                                print("Membuka glosarium...")
+                                print("Opening glossary...")
                             }
                         )
                     }
@@ -72,15 +83,15 @@ struct InteractionNPCView: View {
                         alert: PopUpData(
                             icon: "pause.circle",
                             iconColor: .black,
-                            title: "Percakapan Dijeda",
-                            secondaryButtonTitle: "Lanjutkan Percakapan",
-                            primaryButtonTitle: "Keluar dari Percakapan",
+                            title: "Conversation Paused",
+                            secondaryButtonTitle: "Resume Conversation",
+                            primaryButtonTitle: "Exit Conversation",
                             secondaryAction: {
                                 showBackAlert = false
                             },
                             primaryAction: {
                                 showBackAlert = false
-                                goToMainMenu = true  // ← navigasi ke MainMenuSwipe
+                                goToMainMenu = true
                             }
                         )
                     )
@@ -91,12 +102,18 @@ struct InteractionNPCView: View {
             .toolbar(.hidden, for: .navigationBar)
             .navigationBarBackButtonHidden(true)
             
-            // Navigasi ke InteractionPageUser
+            // Navigate to InteractionPageUser
             .navigationDestination(isPresented: $navigateToInteractionPageUser) {
-                InteractionPageUser()
+                InteractionPageUser(
+                    onBackTapped: {
+                        navigateToInteractionPageUser = false
+                    },
+                    npcMessage: currentMessage,
+                    speechSynthesizer: speechSynthesizer
+                )
             }
             
-            // Navigasi ke MainMenuSwipe saat klik "Keluar dari Percakapan"
+            // Navigate to MainMenuSwipe when "Exit Conversation" is tapped
             .navigationDestination(isPresented: $goToMainMenu) {
                 MainMenuSwipe()
             }
@@ -105,8 +122,26 @@ struct InteractionNPCView: View {
                 withAnimation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.4)) {
                     speechBubbleVisible = true
                 }
+                speakMessage(currentMessage)
             }
         }
+    }
+    
+    // MARK: - Text-to-Speech
+    
+    private func speakMessage(_ message: ConversationMessage) {
+        if speechSynthesizer.isSpeaking {
+            speechSynthesizer.stopSpeaking(at: .immediate)
+        }
+        
+        let utterance = AVSpeechUtterance(string: message.chineseText)
+        utterance.voice = AVSpeechSynthesisVoice(language: "zh-CN")
+        utterance.rate = 0.5
+        utterance.pitchMultiplier = 1.0
+        utterance.volume = 1.0
+        
+        speechSynthesizer.speak(utterance)
+        print("🔊 Speaking: \(message.chineseText)")
     }
 }
 
