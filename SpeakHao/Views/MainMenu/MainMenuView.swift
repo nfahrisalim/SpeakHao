@@ -90,7 +90,7 @@ struct MainMenuView: View {
                 HStack {
                     Spacer()
                     
-                    Button ("Mulai Percakapan"){
+                    Button ("Start Conversation"){
                         onStart?()
                     }
                     .frame(width :220, height: 48)

@@ -39,7 +39,6 @@ struct ConversationMessage: Identifiable, Equatable, Hashable {
 @available(iOS 26.0, *)
 @Generable
 struct NPCReply {
-    // FIX: Hapus properti chineseText duplikat. Hanya boleh ada satu.
     @Guide(description: """
         NPC reply in Simplified Chinese characters only. No pinyin, no English.
         Maximum 2-3 short sentences. Beginner-friendly vocabulary.
@@ -115,18 +114,12 @@ class FoundationModelsService: ObservableObject {
         isGenerating = true
         defer { isGenerating = false }
 
-        print("🟡 [FM] generateResponse called with: \"\(userChinese)\"")
-
         if #available(iOS 26.0, *) {
-            print("🟡 [FM] iOS 26 available — attempting Foundation Models")
             do {
                 let reply = try await callFoundationModels(
                     userText: userChinese,
                     languageAnalysis: languageAnalysis
                 )
-
-                print("✅ [FM] SUCCESS — response: \"\(reply.chineseText)\"")
-                print("✅ [FM] isConversationComplete: \(reply.isConversationComplete)")
 
                 if reply.isConversationComplete {
                     isConversationComplete = true
@@ -140,21 +133,15 @@ class FoundationModelsService: ObservableObject {
                     isClosing: reply.isConversationComplete
                 )
             } catch {
-                print("❌ [FM] ERROR: \(error)")
-                print("❌ [FM] localizedDescription: \(error.localizedDescription)")
                 errorMessage = "Foundation Models: \(error.localizedDescription)"
             }
-        } else {
-            print("❌ [FM] iOS 26 NOT available — device/simulator does not support Foundation Models")
         }
 
-        // Fallback jika Foundation Models tidak tersedia
-        print("⚠️ [FM] Using FALLBACK response")
         return ConversationMessage(
             role: .npc,
             chinese: "好的，请继续。",
             pinyin: "Hǎo de, qǐng jìxù.",
-            english: "[FALLBACK] Foundation Models tidak aktif",
+            english: "[FALLBACK] Foundation Models unavailable",
             isClosing: false
         )
     }
@@ -168,13 +155,10 @@ class FoundationModelsService: ObservableObject {
     ) async throws -> NPCReply {
         let model = SystemLanguageModel.default
 
-        print("🔍 [FM] Model availability: \(model.availability)")
-
         switch model.availability {
         case .available:
-            print("✅ [FM] Model is available")
+            break
         case .unavailable(let reason):
-            print("❌ [FM] Model NOT available — reason: \(reason)")
             switch reason {
             case .modelNotReady:
                 throw FoundationModelsError.modelNotReady
@@ -189,7 +173,6 @@ class FoundationModelsService: ObservableObject {
             throw FoundationModelsError.unavailable
         }
 
-        // Create new session with STAGE CONTEXT — reset each stage for fresh context
         let currentStage = scenario.currentStage
         let stageNumber = scenario.currentStageIndex
         let fullPrompt = scenario.baseSystemPrompt
@@ -199,28 +182,21 @@ class FoundationModelsService: ObservableObject {
             + currentStage.stagePrompt
             + "\n--- END STAGE INFO ---\n"
 
-        // Always create new session per stage to ensure context freshness
         _session = LanguageModelSession(instructions: fullPrompt)
-        print("🔍 [FM] Created new session for STAGE \(stageNumber)")
 
         guard let session = _session else {
-            print("❌ [FM] Session is nil after creation — throwing sessionFailed")
             throw FoundationModelsError.sessionFailed
         }
 
         let enhancedText = buildEnhancedInput(userText: userText, analysis: languageAnalysis, stageNumber: stageNumber)
-        print("🔍 [FM] Sending to model: \"\(enhancedText)\"")
 
         let response = try await session.respond(
             to: enhancedText,
             generating: NPCReply.self
         )
 
-        print("🔍 [FM] Raw response — chinese: \"\(response.content.chineseText)\" | complete: \(response.content.isConversationComplete)")
-
         let chinese = response.content.chineseText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !chinese.isEmpty else {
-            print("❌ [FM] chineseText is empty — throwing emptyResponse")
             throw FoundationModelsError.emptyResponse
         }
 
@@ -232,7 +208,7 @@ class FoundationModelsService: ObservableObject {
         )
     }
 
-    // Input
+    // MARK: - Build Enhanced Input
 
     private func buildEnhancedInput(
         userText: String,
@@ -272,8 +248,6 @@ class FoundationModelsService: ObservableObject {
 
 // MARK: - Custom Errors
 
-// FIX: Conform ke LocalizedError (bukan hanya Error) dan import Foundation
-// agar errorDescription dan localizedDescription berfungsi dengan benar.
 enum FoundationModelsError: LocalizedError {
     case unavailable
     case sessionFailed

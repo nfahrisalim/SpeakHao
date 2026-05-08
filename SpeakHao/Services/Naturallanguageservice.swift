@@ -28,7 +28,6 @@ class NaturalLanguageService {
 
     // MARK: - Language Detection
 
-    /// Detect the language of the transcribed user speech
     func detectLanguage(in text: String) -> String? {
         languageRecognizer.reset()
         languageRecognizer.processString(text)
@@ -37,9 +36,6 @@ class NaturalLanguageService {
 
     // MARK: - Tokenization
 
-    /// Tokenize Chinese or English text into words
-    // ⚠️ FIX: NLLanguage tidak punya static member .chineseSimplified di SDK ini.
-    //         Gunakan NLLanguage("zh-Hans") sebagai pengganti.
     func tokenize(_ text: String, language: NLLanguage = NLLanguage("zh-Hans")) -> [String] {
         let tokenizer = NLTokenizer(unit: .word)
         tokenizer.setLanguage(language)
@@ -58,7 +54,6 @@ class NaturalLanguageService {
 
     // MARK: - Number Extraction
     
-    /// Extract numbers mentioned in the text (for timeline/duration understanding)
     func extractNumbers(from text: String) -> [String] {
         let pattern = "[0-9]+|零|一|二|三|四|五|六|七|八|九|十|百|千|万|兆|两"
         guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
@@ -68,7 +63,7 @@ class NaturalLanguageService {
         let range = NSRange(text.startIndex..<text.endIndex, in: text)
         let matches = regex.matches(in: text, options: [], range: range)
         
-        return matches.compactMap { match in
+        return matches.compactMap { match -> String? in
             if let range = Range(match.range, in: text) {
                 return String(text[range])
             }
@@ -78,18 +73,15 @@ class NaturalLanguageService {
 
     // MARK: - Sentiment Analysis
     
-    /// Detect emotional tone/sentiment of user input
     func detectSentiment(in text: String) -> SentimentType {
         let lower = text.lowercased()
         
-        // Negative indicators (rude, frustrated, angry)
         let negativeKeywords = [
             "草你妈", "cao ni ma", "傻", "stupid", "蠢", "dumb", "烦", "烦死了",
             "滚", "fuck", "shit", "damn", "去死", "die", "垃圾", "garbage",
             "你妈", "bastard", "操", "烦你", "讨厌", "hate"
         ]
         
-        // Positive indicators
         let positiveKeywords = [
             "好", "好的", "很好", "太好了", "谢谢", "谢谢你", "可以", "行", "可以啊",
             "great", "good", "thank", "thanks", "perfect", "ok", "sure", "happy",
@@ -109,38 +101,6 @@ class NaturalLanguageService {
             return .neutral
         }
     }
-    
-//    /// Detect emotional tone/sentiment of user input
-//    func detectSentiment(in text: String) -> String {
-//        let lower = text.lowercased()
-//        
-//        // Negative indicators (rude, frustrated, angry)
-//        let negativeKeywords = [
-//            "草你妈", "cao ni ma", "傻", "stupid", "蠢", "dumb", "烦", "烦死了",
-//            "滚", "fuck", "shit", "damn", "去死", "die", "垃圾", "garbage",
-//            "你妈", "bastard", "操", "烦你", "讨厌", "hate"
-//        ]
-//        
-//        // Positive indicators
-//        let positiveKeywords = [
-//            "好", "好的", "很好", "太好了", "谢谢", "谢谢你", "可以", "行", "可以啊",
-//            "great", "good", "thank", "thanks", "perfect", "ok", "sure", "happy",
-//            "很开心", "开心", "高兴", "满意", "非常满意"
-//        ]
-//        
-//        let hasNegative = negativeKeywords.contains { lower.contains($0) }
-//        let hasPositive = positiveKeywords.contains { lower.contains($0) }
-//        
-//        if hasNegative {
-//            return "negative"
-//        } else if hasPositive {
-//            return "positive"
-//        } else if lower.isEmpty || lower.count < 2 {
-//            return "confused"
-//        } else {
-//            return "neutral"
-//        }
-//    }
     
     func extractTimelineKeywords(from text: String) -> [String] {
         let timelineKeywords = [
@@ -164,27 +124,21 @@ class NaturalLanguageService {
 
     // MARK: - Full Analysis
 
-    /// Analyze user's spoken response in context of the current NPC prompt
-    /// expectedKeywords: words the NPC conversation expects (e.g. greetings, numbers)
     func analyze(userText: String, expectedKeywords: [String] = []) -> LanguageAnalysisResult {
         let detectedLang = detectLanguage(in: userText)
         let isChinese = detectedLang?.hasPrefix("zh") ?? false
 
-        // ⚠️ FIX: Gunakan NLLanguage("zh-Hans") dan NLLanguage("en") sebagai pengganti
-        //         .chineseSimplified dan .english yang tidak tersedia di SDK ini.
         let language: NLLanguage = isChinese ? NLLanguage("zh-Hans") : NLLanguage("en")
         let tokens = tokenize(userText, language: language)
 
-        // Simple relevance check: does user response contain any expected keywords?
         let loweredText = userText.lowercased()
         let isRelevant: Bool
         if expectedKeywords.isEmpty {
-            isRelevant = true // No constraint
+            isRelevant = true
         } else {
             isRelevant = expectedKeywords.contains(where: { loweredText.contains($0.lowercased()) })
         }
         
-        // Detect sentiment
         let sentiment = detectSentiment(in: userText)
 
         return LanguageAnalysisResult(

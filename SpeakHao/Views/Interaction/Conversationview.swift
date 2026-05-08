@@ -66,7 +66,6 @@ struct ConversationView: View {
                             }
                         },
                         onHistory: {
-                            print("History tapped")
                         }
                     )
                     .padding(.top, geometry.safeAreaInsets.top > 0 ? 0 : 20)
@@ -85,7 +84,6 @@ struct ConversationView: View {
         }
         .navigationBarBackButtonHidden(true)
 
-        // ── Back / pause alert ───────────────────────────────────────────────
         .customAlert(
             isPresented: $showBackAlert,
             alert: PopUpData(
@@ -128,7 +126,6 @@ struct ConversationView: View {
             }
         }
 
-        // ── Initial entrance animation ───────────────────────────────────────
         .onAppear {
             withAnimation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.4)) {
                 speechBubbleVisible = true
@@ -155,8 +152,6 @@ struct ConversationView: View {
             BottomActionBar(
                 isPressed: $isPressed,
                 onAnswerTap: {
-                    // Reset bubble before entering user mode so the
-                    // previous round's text doesn't flash on screen.
                     chinese     = ""
                     pinyin      = ""
                     translation = ""
@@ -165,7 +160,6 @@ struct ConversationView: View {
                     }
                 },
                 onBookTap: {
-                    print("Opening glossary...")
                 }
             )
         }
@@ -177,8 +171,6 @@ struct ConversationView: View {
     private func userModeContent() -> some View {
         VStack(spacing: 12) {
 
-            // FIX: onSend callback menghubungkan tombol Send di dalam
-            // SpeechBubbleUser langsung ke vm.sendUserResponse().
             SpeechBubbleUser(
                 pinyinText:      $pinyin,
                 chineseText:     $chinese,
@@ -203,13 +195,12 @@ struct ConversationView: View {
             .padding(.horizontal, 40)
             .padding(.bottom, 10)
 
-            // ── Loading indicator while NPC generates ────────────────────────
             if vm.isGenerating {
                 HStack(spacing: 6) {
                     ProgressView()
                         .tint(.white)
                         .scaleEffect(0.8)
-                    Text("NPC sedang merespons…")
+                    Text("NPC is responding…")
                         .font(.system(size: 13))
                         .foregroundColor(Color(white: 0.85))
                 }
@@ -220,7 +211,7 @@ struct ConversationView: View {
             ActionBar(
                 isPressed: $isPressed,
                 onMainAction: {  },
-                onSecondaryAction: { print("Vocabulary tapped") },
+                onSecondaryAction: { },
                 isCircle: true
             ) {
                 Image(systemName: vm.isRecording ? "stop.fill" : "mic.fill")
