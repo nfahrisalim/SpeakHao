@@ -171,8 +171,7 @@ struct ConversationView: View {
                         isUserTurn = true
                     }
                 },
-                onBookTap: {
-                }
+                onBookTap: { showDictionary = true }
             )
         }
     }

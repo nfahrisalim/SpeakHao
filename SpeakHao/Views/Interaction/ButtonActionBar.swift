@@ -47,7 +47,6 @@ struct BottomActionBar: View {
                             .background(Color.white, in: Circle())
                             .shadow(color: .black.opacity(0.1), radius: 8, y: 4)
                     }
-                    .hidden()
                 }
                 .padding(.horizontal, 25)
             }
