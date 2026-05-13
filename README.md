@@ -85,8 +85,6 @@ SpeakHao transforms language learning from rote memorization into dynamic, real-
 - **MVVM Pattern** — Clean separation between Views, ViewModels, and Services
 - **StateObject & Environment** — Efficient state propagation across the view hierarchy
 
-```
-
 ## Screenshots
 
 <div align="center">
@@ -206,5 +204,3 @@ SpeakHao is provided as-is for educational purposes. See the included LICENSE fi
 - **Discord** — Join our community for discussions and feedback
 
 ---
-
-**Happy learning! 你好, let's master Mandarin together! 🚀**
