@@ -54,10 +54,6 @@ SpeakHao transforms language learning from rote memorization into dynamic, real-
 </div>
 ## Requirements
 
-### Minimum iOS Version
-- **iOS 17.6** — Core SwiftUI and AVFoundation features
-- **iOS 18.0+** — Recommended for Translation Framework and Foundation Models support
-
 ### Required Permissions
 - **Microphone Access** — To record your Mandarin speech during conversation
 - **Speech Recognition** — To transcribe your recorded audio into text
@@ -96,22 +92,21 @@ SpeakHao transforms language learning from rote memorization into dynamic, real-
 ## Known Limitations
 
 - Speech recognition optimized for Mandarin; English recognition available for reference
-- Translation Framework requires iOS 18+ (fallback UI gracefully disabled on iOS 17)
 - Foundation Models require adequate on-device storage and processing power
 - Scenarios are narrative-driven; users should have basic Chinese literacy
 
 ## Troubleshooting
 
-### "Microphone Permission Denied"
+### Microphone Permission Denied
 - Go to **Settings → SpeakHao → Microphone** and toggle "Allow"
 - Restart the app
 
-### "Speech Recognition Unavailable"
+### Speech Recognition Unavailable
 - Ensure Mandarin language is available in **Settings → General → Language & Region**
 - Check internet connectivity (recognition can use online models on some devices)
 - Restart the app
 
-### "Translation Not Available"
+### Translation Not Available
 - Requires iOS 18.0 or later
 - Check **Settings → General → Language & Region** for supported language pairs
 
