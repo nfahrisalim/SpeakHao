@@ -142,16 +142,6 @@ SpeakHao transforms language learning from rote memorization into dynamic, real-
 4. Tap the **Swap button** to reverse direction
 5. Go back to the conversation when done
 
-## Development Roadmap
-
-- [ ] Additional scenario packs (Restaurant, Hotel, Travel, etc.)
-- [ ] User progress tracking & achievement badges
-- [ ] Spaced repetition for vocabulary review
-- [ ] Detailed pronunciation feedback
-- [ ] Multi-regional accent support
-- [ ] Offline mode with pre-cached models
-- [ ] Community scenario contributions
-
 ## Known Limitations
 
 - Speech recognition optimized for Mandarin; English recognition available for reference
@@ -177,25 +167,5 @@ SpeakHao transforms language learning from rote memorization into dynamic, real-
 ### App Crashes on Startup
 - Clear app cache: Go to **Settings → General → iPhone Storage → SpeakHao → Offload App**
 - Reinstall: **Settings → General → iPhone Storage → SpeakHao → Delete App → Reinstall**
-
-## Contributing
-
-We welcome contributions! Please:
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature-name`
-3. Commit changes: `git commit -m 'Add new feature'`
-4. Push: `git push origin feature/your-feature-name`
-5. Open a Pull Request
-
-## License
-
-SpeakHao is provided as-is for educational purposes. See the included LICENSE file for details.
-
-## Contact & Support
-
-- **GitHub Issues** — Report bugs or request features
-- **Email** — nfahrisalim@example.com
-- **Discord** — Join our community for discussions and feedback
 
 ---
