@@ -84,25 +84,23 @@ SpeakHao transforms language learning from rote memorization into dynamic, real-
 - **Combine Framework** — Reactive data binding and async operations
 - **MVVM Pattern** — Clean separation between Views, ViewModels, and Services
 - **StateObject & Environment** — Efficient state propagation across the view hierarchy
-
 ## Screenshots
 
 <div align="center">
 
 | Main Menu — Browse Scenarios | Conversation (NPC Mode) — Listen & Learn |
 |:---:|:---:|
-| ![Main Menu](SpeakHao/Images/MainMenu.png) | ![Interaction Page](SpeakHao/Images/Interaction%20page.png) |
+| <img src="SpeakHao/Images/MainMenu.png" width="200"/> | <img src="SpeakHao/Images/Interaction%20page.png" width="200"/> |
 
 | Conversation (User Mode) — Speak & Respond | Dictionary — Quick Translation |
 |:---:|:---:|
-| ![Interaction Page - User](SpeakHao/Images/Interaction%20page%20-%20USER.png) | ![Dictionary Page](SpeakHao/Images/Dictionary%20Page.png) |
+| <img src="SpeakHao/Images/Interaction%20page%20-%20USER.png" width="200"/> | <img src="SpeakHao/Images/Dictionary%20Page.png" width="200"/> |
 
 | History — Review & Reinforce |
 |:---:|
-| ![History Page](SpeakHao/Images/History%20Page.png) |
+| <img src="SpeakHao/Images/History%20Page.png" width="200"/> |
 
 </div>
-
 ## Requirements
 
 ### Minimum iOS Version
