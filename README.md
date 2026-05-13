@@ -89,20 +89,17 @@ SpeakHao transforms language learning from rote memorization into dynamic, real-
 
 <div align="center">
 
-### Main Menu — Browse Scenarios
-![Main Menu](SpeakHao/Images/MainMenu.png)
+| Main Menu — Browse Scenarios | Conversation (NPC Mode) — Listen & Learn |
+|:---:|:---:|
+| ![Main Menu](SpeakHao/Images/MainMenu.png) | ![Interaction Page](SpeakHao/Images/Interaction%20page.png) |
 
-### Conversation (NPC Mode) — Listen & Learn
-![Interaction Page](SpeakHao/Images/Interaction%20page.png)
+| Conversation (User Mode) — Speak & Respond | Dictionary — Quick Translation |
+|:---:|:---:|
+| ![Interaction Page - User](SpeakHao/Images/Interaction%20page%20-%20USER.png) | ![Dictionary Page](SpeakHao/Images/Dictionary%20Page.png) |
 
-### Conversation (User Mode) — Speak & Respond
-![Interaction Page - User](SpeakHao/Images/Interaction%20page%20-%20USER.png)
-
-### Dictionary — Quick Translation
-![Dictionary Page](SpeakHao/Images/Dictionary%20Page.png)
-
-### History — Review & Reinforce
-![History Page](SpeakHao/Images/History%20Page.png)
+| History — Review & Reinforce |
+|:---:|
+| ![History Page](SpeakHao/Images/History%20Page.png) |
 
 </div>
 
