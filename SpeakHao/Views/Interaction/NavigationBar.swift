@@ -40,10 +40,9 @@ struct NavigationBar: View {
             Button(action: onHistory) {
                 HStack(spacing: 6) {
                     Image(systemName: "clock.arrow.circlepath")
-                        .font(.system(size: 14, weight: .medium))
-                    Text("Riwayat")
-                        .font(.system(size: 15, weight: .medium))
+                    Text("History")
                 }
+                .font(.system(size: 15, weight: .medium))
                 .foregroundColor(.black.opacity(0.7))
                 .padding(.horizontal, 16)
                 .padding(.vertical, 10)
@@ -55,7 +54,6 @@ struct NavigationBar: View {
                 .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
             }
             .fixedSize(horizontal: true, vertical: false)
-            .hidden() //ngehide button riwayat
         }
         .padding(.horizontal, 20)
         .padding(.top, 10)

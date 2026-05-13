@@ -7,7 +7,7 @@
 
 import Foundation
 import Combine
-import AVFoundation  
+import AVFoundation
 
 @MainActor
 class InteractionViewModel: ObservableObject {
@@ -26,7 +26,7 @@ class InteractionViewModel: ObservableObject {
     @Published var errorMessage:   String?
     @Published var lastAnalysis:   LanguageAnalysisResult?
 
-    private var scenario: NPCScenario
+    let scenario: NPCScenario
 
     private var transcriptionSink: AnyCancellable?
 

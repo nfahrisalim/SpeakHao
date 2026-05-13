@@ -84,7 +84,6 @@ struct ActionBar<MainContent: View>: View {
                             .background(Color.white, in: Circle())
                             .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
                     }
-                    .hidden() // ngehide button dictionary
                 }
                 .padding(.horizontal, 30)
                 .padding(.bottom, -30)

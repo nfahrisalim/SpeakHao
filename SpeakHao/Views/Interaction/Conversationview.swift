@@ -16,6 +16,8 @@ struct ConversationView: View {
     @State private var showTranslation     = false
     @State private var speechBubbleVisible = false
     @State private var showBackAlert       = false
+    @State private var showHistory         = false
+    @State private var showDictionary      = false
     @State private var pinyin      = ""
     @State private var chinese     = ""
     @State private var translation = ""
@@ -66,6 +68,7 @@ struct ConversationView: View {
                             }
                         },
                         onHistory: {
+                            showHistory = true
                         }
                     )
                     .padding(.top, geometry.safeAreaInsets.top > 0 ? 0 : 20)
@@ -102,6 +105,15 @@ struct ConversationView: View {
                 }
             )
         )
+        .navigationDestination(isPresented: $showHistory) {
+            HistoryView(
+                messages: vm.messages,
+                scenarioDescription: vm.scenario.description
+            )
+        }
+        .navigationDestination(isPresented: $showDictionary) {
+            DictionaryPage()
+        }
         .onChange(of: vm.pendingUserText) { _, newValue in
             if !newValue.isEmpty {
                 chinese     = newValue
@@ -211,7 +223,7 @@ struct ConversationView: View {
             ActionBar(
                 isPressed: $isPressed,
                 onMainAction: {  },
-                onSecondaryAction: { },
+                onSecondaryAction: { showDictionary = true },
                 isCircle: true
             ) {
                 Image(systemName: vm.isRecording ? "stop.fill" : "mic.fill")
